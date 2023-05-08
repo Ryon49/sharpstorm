@@ -16,3 +16,8 @@ dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w unique-ids --bin ./s
 ``` shell
 dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w broadcast --bin ./sharpstorm/sharpstorm --node-count 1 --time-limit 20 --rate 10 --log-stderr
 ```
+
+## Grow-Only Counter
+``` shell
+dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w g-counter --bin ./sharpstorm/sharpstorm --node-count 3 --rate 100 --time-limit 20 --nemesis partition --log-stderr
+```

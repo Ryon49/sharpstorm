@@ -63,11 +63,29 @@ public class BroadcastMessageBody : MessageBody
     public long Message { get; set; }
 }
 
+// #region Broadcast
+// public class ReadMessageBody : MessageBody
+// {
+//     [JsonPropertyName("messages")]
+//     public List<long>? Messages { get; set; }
+// }
+// #endregion Broadcast
+
+// #region Grow-only Counter
 public class ReadMessageBody : MessageBody
 {
-    [JsonPropertyName("messages")]
-    public List<long>? Messages { get; set; }
+    [JsonPropertyName("value")]
+    public long Value { get; set; }
 }
+// #endregion Grow-only Counter
+
+public class AddMessageBody : MessageBody
+{
+    [JsonPropertyName("delta")]
+    public long Detla { get; set; }
+}
+
+public class SyncDeltaMessageBody : AddMessageBody { }
 
 /// <summary>
 /// Because [JsonPolymorphic] attribute does not support TypeDiscriminatorPropertyName that is not in the first
@@ -92,6 +110,8 @@ sealed public class PolymorphicMessageBodyConverter : JsonConverter<MessageBody>
             "topology" => root.Deserialize<TopologyMessageBody>(options),
             "broadcast" => root.Deserialize<BroadcastMessageBody>(options),
             "read" => root.Deserialize<ReadMessageBody>(options),
+            "add" => root.Deserialize<AddMessageBody>(options),
+            "syncDelta" => root.Deserialize<SyncDeltaMessageBody>(options), // a custom workload for syncing counter
             _ => root.Deserialize<MessageBody>(options),
         };
     }
