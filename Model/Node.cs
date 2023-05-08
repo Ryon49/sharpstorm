@@ -21,6 +21,7 @@ public class Node
         {
             {nameof(InitMessageBody), HandleInit},
             {nameof(EchoMessageBody), HandleEcho},
+            {nameof(UniqueIdMessageBody), HandleGenerateUniqueId},
         };
     }
 
@@ -72,6 +73,21 @@ public class Node
                 MsgId = echoMessageBody.MsgId,
                 InReplyTo = echoMessageBody.MsgId,
                 Echo = echoMessageBody.Echo,
+            }
+        };
+    }
+
+    public Message HandleGenerateUniqueId(Message message)
+    {
+        UniqueIdMessageBody messageBody = (UniqueIdMessageBody)message.Body;
+        return new Message()
+        {
+            Src = NodeId,
+            Dest = message.Src,
+            Body = new UniqueIdMessageBody
+            {
+                Type = "generate_ok",
+                InReplyTo = messageBody.MsgId,
             }
         };
     }

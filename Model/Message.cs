@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Wivuu.Polymorphism;
 
 namespace Sharpstone.Model;
 
@@ -46,6 +45,12 @@ public class EchoMessageBody : MessageBody
     public string Echo { get; set; } = String.Empty;
 }
 
+public class UniqueIdMessageBody : MessageBody
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+}
+
 /// <summary>
 /// Because [JsonPolymorphic] attribute does not support TypeDiscriminatorPropertyName that is not in the first
 /// of a json object, PolymorphicMessageBodyConverter manually decides which type of MessageBody to parse.
@@ -65,6 +70,7 @@ sealed public class PolymorphicMessageBodyConverter : JsonConverter<MessageBody>
         {
             "init" => root.Deserialize<InitMessageBody>(options),
             "echo" => root.Deserialize<EchoMessageBody>(options),
+            "generate" => root.Deserialize<UniqueIdMessageBody>(options),
             _ => root.Deserialize<MessageBody>(options),
         };
     }
