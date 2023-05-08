@@ -51,6 +51,24 @@ public class UniqueIdMessageBody : MessageBody
     public string Id { get; set; } = Guid.NewGuid().ToString();
 }
 
+public class TopologyMessageBody : MessageBody
+{
+    [JsonPropertyName("topology")]
+    public Dictionary<string, List<string>> Topology { get; set; } = null!;
+}
+
+public class BroadcastMessageBody : MessageBody
+{
+    [JsonPropertyName("message")]
+    public long Message { get; set; }
+}
+
+public class ReadMessageBody : MessageBody
+{
+    [JsonPropertyName("messages")]
+    public List<long>? Messages { get; set; }
+}
+
 /// <summary>
 /// Because [JsonPolymorphic] attribute does not support TypeDiscriminatorPropertyName that is not in the first
 /// of a json object, PolymorphicMessageBodyConverter manually decides which type of MessageBody to parse.
@@ -71,6 +89,9 @@ sealed public class PolymorphicMessageBodyConverter : JsonConverter<MessageBody>
             "init" => root.Deserialize<InitMessageBody>(options),
             "echo" => root.Deserialize<EchoMessageBody>(options),
             "generate" => root.Deserialize<UniqueIdMessageBody>(options),
+            "topology" => root.Deserialize<TopologyMessageBody>(options),
+            "broadcast" => root.Deserialize<BroadcastMessageBody>(options),
+            "read" => root.Deserialize<ReadMessageBody>(options),
             _ => root.Deserialize<MessageBody>(options),
         };
     }
