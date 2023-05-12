@@ -13,7 +13,7 @@ public class GCounterNode : Node
         _handlers[MessageType.INIT] = HandleInit;
         _handlers[MessageType.ADD] = HandleAdd;
         _handlers[MessageType.READ] = HandleRead;
-        _handlers[MessageType.GCounterSync] = HandleSync;
+        _handlers[MessageType.GCOUNTERSYNC] = HandleSync;
     }
 
     public new Message HandleInit(Message message)
@@ -43,13 +43,14 @@ public class GCounterNode : Node
                             Dest = nodeId,
                             Body = new GCounterSyncMessageBody()
                             {
-                                Type = MessageType.GCounterSync,
+                                Type = MessageType.GCOUNTERSYNC,
                                 Detla = _deltaStore[NodeId],
                             }
                         };
                         _stdout.WriteLine(JsonSerializer.Serialize(heartbeat));
                     }
                 }
+                _stdout.Flush();
             }
         });
 
