@@ -18,8 +18,22 @@ Single-Node Broadcast
 dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w broadcast --bin ./sharpstorm/sharpstorm broadcast --node-count 1 --time-limit 20 --rate 10 --log-stderr
 ```
 Multi-Node Broadcast
+- So here is the idea, the passive approach.
+    Each node record the number of messages other node has. And for every X second, the node gossip/ask its neighbor about new messages
 ``` shell
 dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w broadcast --bin ./sharpstorm/sharpstorm broadcast --node-count 5 --time-limit 20 --rate 10 --log-stderr
+```
+Fault Tolerant Broadcast
+``` shell
+dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w broadcast --bin ./sharpstorm/sharpstorm broadcast --node-count 5 --time-limit 20 --rate 10 --nemesis partition --log-stderr
+```
+Efficient Broadcast, Part I & II
+- Due to the passive nature, 
+    X = 25ms, with 60 messages per opersion, the latency is close to 5724ms
+    X = 500ms, with 4 messages per opersion, the latency is close to 16893ms
+    X = 1s, with 4 messages per opersion, the latency is close to 11557ms
+``` shell
+dotnet publish -o sharpstorm; ./maelstrom/maelstrom test -w broadcast --bin ./sharpstorm/sharpstorm broadcast --node-count 25 --time-limit 20 --rate 100 --latency 100 --log-stderr
 ```
 
 ## Grow-Only Counter

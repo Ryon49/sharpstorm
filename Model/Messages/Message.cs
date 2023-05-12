@@ -10,9 +10,11 @@ public record MessageType
     public const string GENERATE = "generate";
     public const string TOPOLOGY = "topology";
     public const string BROADCAST = "broadcast";
+    public const string BROADCASTSYNC = "broadcast_sync";
+    public const string OKBROADCASTSYNC = "ok_gcounter_sync";
     public const string READ = "read";
     public const string ADD = "add";
-    public const string GCounterSync = "gcounter_sync";
+    public const string GCOUNTERSYNC = "gcounter_sync";
 }
 
 public class Message
@@ -77,9 +79,11 @@ sealed public class PolymorphicMessageBodyConverter : JsonConverter<MessageBody>
             // broadcast
             MessageType.TOPOLOGY => root.Deserialize<TopologyMessageBody>(options),
             MessageType.BROADCAST => root.Deserialize<BroadcastMessageBody>(options),
+            MessageType.BROADCASTSYNC => root.Deserialize<BroadcastSyncMessageBody>(options),
+            MessageType.OKBROADCASTSYNC => root.Deserialize<BroadcastSyncResponseMessageBody>(options),
             // grow-only counter
             MessageType.ADD => root.Deserialize<AddMessageBody>(options),
-            MessageType.GCounterSync => root.Deserialize<GCounterSyncMessageBody>(options), // a custom workload for syncing counter
+            MessageType.GCOUNTERSYNC => root.Deserialize<GCounterSyncMessageBody>(options), // a custom workload for syncing counter
             // broadcast and grow-only counter
             MessageType.READ => root.Deserialize<ReadMessageBody>(options),
             _ => root.Deserialize<MessageBody>(options),
